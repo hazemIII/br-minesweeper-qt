@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewGameDialog.ui'
 **
-** Created: Sun Dec 26 19:30:44 2010
+** Created: Mon Dec 27 00:22:04 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -28,7 +28,7 @@ class Ui_NewGameDialog
 {
 public:
     QDialogButtonBox *buttonBox;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QLineEdit *rowText;
     QLabel *label_2;
@@ -47,42 +47,45 @@ public:
         buttonBox->setGeometry(QRect(50, 150, 181, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-        widget = new QWidget(NewGameDialog);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(20, 20, 246, 118));
-        gridLayout = new QGridLayout(widget);
+        layoutWidget = new QWidget(NewGameDialog);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 20, 246, 118));
+        gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        rowText = new QLineEdit(widget);
+        rowText = new QLineEdit(layoutWidget);
         rowText->setObjectName(QString::fromUtf8("rowText"));
 
         gridLayout->addWidget(rowText, 0, 1, 1, 1);
 
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         gridLayout->addWidget(label_2, 1, 0, 1, 1);
 
-        label_3 = new QLabel(widget);
+        label_3 = new QLabel(layoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         gridLayout->addWidget(label_3, 2, 0, 1, 1);
 
-        mineText = new QLineEdit(widget);
+        mineText = new QLineEdit(layoutWidget);
         mineText->setObjectName(QString::fromUtf8("mineText"));
 
         gridLayout->addWidget(mineText, 2, 1, 1, 1);
 
-        columnText = new QLineEdit(widget);
+        columnText = new QLineEdit(layoutWidget);
         columnText->setObjectName(QString::fromUtf8("columnText"));
 
         gridLayout->addWidget(columnText, 1, 1, 1, 1);
 
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
+        QWidget::setTabOrder(rowText, columnText);
+        QWidget::setTabOrder(columnText, mineText);
+        QWidget::setTabOrder(mineText, buttonBox);
 
         retranslateUi(NewGameDialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), NewGameDialog, SLOT(accept()));

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'NewGameDialog.h'
 **
-** Created: Sun Dec 26 22:25:40 2010
+** Created: Mon Dec 27 00:22:08 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
