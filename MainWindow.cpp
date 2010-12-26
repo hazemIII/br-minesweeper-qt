@@ -33,19 +33,26 @@ void MainWindow::createMenuBar(){
     this->gameMenu=this->menuBar()->addMenu(tr("&Game"));
     this->gameMenu->addAction(this->newGameAction);
     this->gameMenu->addAction(this->quitAction);
+
+    this->helpMenu=this->menuBar()->addMenu(tr("&Help"));
+    this->helpMenu->addAction(this->aboutAction);
 }
 void MainWindow::createActions(){
     this->newGameAction=new QAction(tr("&New Game"),this);
     this->newGameAction->setStatusTip(tr("start a new game"));
     this->newGameAction->setShortcut(tr("Ctrl+n"));
-    this->newGameAction->setIcon(QIcon(":/images/img/new.png"));
+    //this->newGameAction->setIcon(QIcon(":/images/img/new.png"));  //doesn't work?
     connect(this->newGameAction,SIGNAL(triggered()),this,SLOT(newGameSlot()));
 
     this->quitAction=new QAction(tr("&Quit"),this);
     this->quitAction->setStatusTip(tr("quit QMineSweeper"));
     this->quitAction->setShortcut(tr("Ctrl+q"));
-    this->quitAction->setIcon(QIcon(":/images/img/quit.png"));
+    //this->quitAction->setIcon(QIcon(":/images/img/quit.png"));    //doesn't work?
     connect(this->quitAction,SIGNAL(triggered()),this,SLOT(close()));
+
+    this->aboutAction=new QAction(tr("&About"),this);
+    this->aboutAction->setShortcut(tr("Ctrl+h"));
+    connect(this->aboutAction,SIGNAL(triggered()),this,SLOT(aboutSlot()));
 }
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     this->move(300,200);
@@ -138,4 +145,9 @@ void MainWindow::sunkNeighbourWidgets(int i, int j){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
     }
     */
+}
+void MainWindow::aboutSlot(){
+    QMessageBox::about(this,tr("About"),tr("<h2>QMineSweeper</h2>"
+                                           "<p>This is a mine sweeper game implemented in QT</p>"
+                                           "<p>This is part of br-minesweeper project.</p>"));
 }

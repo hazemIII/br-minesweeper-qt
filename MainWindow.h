@@ -33,9 +33,12 @@ private:
     QFrame *frame;
     QAction *newGameAction;
     QAction *quitAction;
+    QAction *aboutAction;
     QMenu* gameMenu;
+    QMenu* helpMenu;
 public slots:
     void newGameSlot();
+    void aboutSlot();
 };
 
 #endif // MAINWINDOW_H
