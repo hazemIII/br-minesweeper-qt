@@ -13,6 +13,8 @@
 #include<stdexcept>
 #include<algorithm>
 #include<QString>
+#include<time.h>
+
 #define TEST_MODE 0
 #define TEXTUI_MODE 1
 #define GUI_MODE 2

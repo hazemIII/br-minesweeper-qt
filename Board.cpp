@@ -40,6 +40,7 @@ void Board::setupValues(){
   randomly fill in <num> mines into board
 */
 void Board::randomlyFillMines(int num){
+    srand(time(NULL));
     int i,j;
     while(num--){
         do{

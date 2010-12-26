@@ -12,6 +12,7 @@ private:
 public:
     static IconFactory* getInstance();
     QIcon getIcon(Cell& c);
+    QIcon getIcon(int state,int value);
 };
 
 #endif // ICONFACTORY_H

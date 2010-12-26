@@ -9,6 +9,9 @@ IconFactory* IconFactory::getInstance(){
 }
 QIcon IconFactory::getIcon(Cell &c){
     int s=c.getState(),v=c.getValue();
+    return this->getIcon(s,v);
+}
+QIcon IconFactory::getIcon(int s, int v){
     if(s==Cell::UNKNOWN)
         return QIcon(":/images/img/UNKNOWN.png");
     else if(s==Cell::MARKED)

@@ -136,15 +136,24 @@ void MainWindow::explore(int i, int j){
     this->checkWinLose();
 }
 void MainWindow::raiseNeighbourWidgets(int i, int j){
-    //TODO
-}
-void MainWindow::sunkNeighbourWidgets(int i, int j){
-    /*
     Board::LocationList lst=this->gl->getNeighbours(i,j);
     for(int k=0;k<lst.size();k++){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
+        if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN){
+            b->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0));
+        }
     }
-    */
+    //this->updateGUI();
+}
+void MainWindow::sunkNeighbourWidgets(int i, int j){
+    Board::LocationList lst=this->gl->getNeighbours(i,j);
+    for(int k=0;k<lst.size();k++){
+        MsButton* b=this->buttons[lst[k].first][lst[k].second];
+        if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN){
+            b->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));
+        }
+    }
+    //this->updateGUI();    //should not update here, or else sunken fails immediately
 }
 void MainWindow::aboutSlot(){
     QMessageBox::about(this,tr("About"),tr("<h2>QMineSweeper</h2>"
