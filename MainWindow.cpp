@@ -1,0 +1,136 @@
+#include"MainWindow.h"
+#include"IconFactory.h"
+#include"NewGameDialog.h"
+void MainWindow::newGameSlot(){
+    NewGameDialog d(this->gl->getRow(),this->gl->getCol(),this->gl->getNum());
+    if(d.exec()){
+        int row=d.rowText->text().toInt();
+        int col=d.columnText->text().toInt();
+        int num=d.mineText->text().toInt();
+        try{
+            this->newGame(row,col,num);
+        }catch(std::exception e){
+            QMessageBox::warning(this,tr("Invalid input"),
+                                 tr(("<h4>Invalid input encountered</h4>"
+                                    "<ul>"
+                                    "<li>row within ["+str(Board::MIN_ROW_NUM)+","+str(Board::MAX_ROW_NUM)+"]</li>"
+                                    "<li>column within ["+str(Board::MIN_COLUMN_NUM)+","+str(Board::MAX_COLUMN_NUM)+"]</li>"
+                                    "<li>mine number within [0,row*column]</li>"
+                                    "</ul>").c_str()),
+                                 QMessageBox::Ok);
+        }
+    }
+}
+void MainWindow::createGameLogic(){
+    this->gl=new NormalGameLogic();
+}
+void MainWindow::initializeWidgets(){
+    this->central=new QWidget(this);
+    this->setCentralWidget(this->central);
+    this->frame=0;
+}
+void MainWindow::createMenuBar(){
+    this->gameMenu=this->menuBar()->addMenu(tr("&Game"));
+    this->gameMenu->addAction(this->newGameAction);
+    this->gameMenu->addAction(this->quitAction);
+}
+void MainWindow::createActions(){
+    this->newGameAction=new QAction(tr("&New Game"),this);
+    this->newGameAction->setStatusTip(tr("start a new game"));
+    connect(this->newGameAction,SIGNAL(triggered()),this,SLOT(newGameSlot()));
+
+    this->quitAction=new QAction(tr("&Quit"),this);
+    this->quitAction->setStatusTip(tr("quit QMineSweeper"));
+    connect(this->quitAction,SIGNAL(triggered()),this,SLOT(close()));
+}
+MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
+    this->move(300,200);
+    createGameLogic();
+    initializeWidgets();
+    createBoard(Board::MAX_ROW_NUM,Board::MAX_COLUMN_NUM);
+    createActions();
+    createMenuBar();
+    this->newGame(10,10,10);    //start a new game by default
+}
+void MainWindow::createBoard(int row, int col){
+    this->frame=new QFrame(this->central);
+    this->frame->setGeometry(QRect(0,0,20*row,20*col));
+    buttons.clear();
+    buttons.resize(row);
+    for(int i=0;i<row;i++)
+        buttons[i].resize(col);
+    for(int i=0;i<row;i++){
+        for(int j=0;j<col;j++){
+            MsButton *b=new MsButton(this->frame,i,j);
+            b->setGeometry(QRect(j*20,i*20,21,21));
+            buttons[i][j]=b;
+        }
+    }
+}
+void MainWindow::updateGUI(bool rebuildBoard){
+    int row=this->gl->getRow(),col=this->gl->getCol();
+    if(rebuildBoard){
+        this->setFixedSize(col*20,row*20+this->menuBar()->sizeHint().height());
+        //this->resize(col*20,row*20+this->menuBar()->sizeHint().height());
+    }
+    for(int i =0;i<row;i++)
+        for(int j=0;j<col;j++){
+            MsButton* b=buttons[i][j];
+            b->setIcon(IconFactory::getInstance()->getIcon(gl->getCell(i,j)));
+        }
+}
+void MainWindow::newGame(int row, int col,int num){
+    /**initialize static variables**/
+    MsButton::state=0;
+    MsButton::gui=this;
+    /******************************/
+    this->gl->newGame(row,col,num);
+    this->updateGUI(true);
+}
+void MainWindow::checkWinLose(){
+    if(this->gl->checkWin()){
+        QMessageBox::information(this,"You Win!",
+                                 tr("<h3>Congratulations! You win!</h3>"));
+    }else if(this->gl->checkLose()){
+        QMessageBox::information(this,"You Lose",
+                                 tr("<h3>Sorry, You lose.</h3>"
+                                    "<p>better luck next time</p>"));
+    }
+}
+void MainWindow::dig(int i, int j){
+    this->gl->dig(i,j);
+    this->updateGUI();
+    this->checkWinLose();
+}
+void MainWindow::mark(int i, int j){
+    this->gl->mark(i,j);
+    this->updateGUI();
+    this->checkWinLose();
+}
+void MainWindow::unmark(int i, int j){
+    this->gl->unmark(i,j);
+    this->updateGUI();
+}
+void MainWindow::toggle(int i, int j){
+    int s=this->gl->getCell(i,j).getState();
+    if(s==Cell::MARKED)
+        this->unmark(i,j);
+    else if(s==Cell::UNKNOWN)
+        this->mark(i,j);
+}
+void MainWindow::explore(int i, int j){
+    this->gl->explore(i,j);
+    this->updateGUI();
+    this->checkWinLose();
+}
+void MainWindow::raiseNeighbourWidgets(int i, int j){
+    //TODO
+}
+void MainWindow::sunkNeighbourWidgets(int i, int j){
+    /*
+    Board::LocationList lst=this->gl->getNeighbours(i,j);
+    for(int k=0;k<lst.size();k++){
+        MsButton* b=this->buttons[lst[k].first][lst[k].second];
+    }
+    */
+}
