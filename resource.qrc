@@ -12,5 +12,8 @@
         <file>img/MARKED.png</file>
         <file>img/MINE.png</file>
         <file>img/UNKNOWN.png</file>
+        <file>img/logo.png</file>
+        <file>img/new.png</file>
+        <file>img/quit.png</file>
     </qresource>
 </RCC>

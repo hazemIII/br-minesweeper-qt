@@ -37,14 +37,19 @@ void MainWindow::createMenuBar(){
 void MainWindow::createActions(){
     this->newGameAction=new QAction(tr("&New Game"),this);
     this->newGameAction->setStatusTip(tr("start a new game"));
+    this->newGameAction->setShortcut(tr("Ctrl+n"));
+    this->newGameAction->setIcon(QIcon(":/images/img/new.png"));
     connect(this->newGameAction,SIGNAL(triggered()),this,SLOT(newGameSlot()));
 
     this->quitAction=new QAction(tr("&Quit"),this);
     this->quitAction->setStatusTip(tr("quit QMineSweeper"));
+    this->quitAction->setShortcut(tr("Ctrl+q"));
+    this->quitAction->setIcon(QIcon(":/images/img/quit.png"));
     connect(this->quitAction,SIGNAL(triggered()),this,SLOT(close()));
 }
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     this->move(300,200);
+    this->setWindowIcon(QIcon(":/images/img/logo.png"));
     createGameLogic();
     initializeWidgets();
     createBoard(Board::MAX_ROW_NUM,Board::MAX_COLUMN_NUM);
