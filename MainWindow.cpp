@@ -12,11 +12,11 @@ void MainWindow::newGameSlot(){
         }catch(std::exception e){
             QMessageBox::warning(this,tr("Invalid input"),
                                  tr(("<h4>Invalid input encountered</h4>"
-                                    "<ul>"
-                                    "<li>row within ["+str(Board::MIN_ROW_NUM)+","+str(Board::MAX_ROW_NUM)+"]</li>"
-                                    "<li>column within ["+str(Board::MIN_COLUMN_NUM)+","+str(Board::MAX_COLUMN_NUM)+"]</li>"
-                                    "<li>mine number within [0,row*column]</li>"
-                                    "</ul>").c_str()),
+                                     "<ul>"
+                                     "<li>row within ["+str(Board::MIN_ROW_NUM)+","+str(Board::MAX_ROW_NUM)+"]</li>"
+                                     "<li>column within ["+str(Board::MIN_COLUMN_NUM)+","+str(Board::MAX_COLUMN_NUM)+"]</li>"
+                                     "<li>mine number within [0,row*column]</li>"
+                                     "</ul>").c_str()),
                                  QMessageBox::Ok);
         }
     }
@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     createBoard(Board::MAX_ROW_NUM,Board::MAX_COLUMN_NUM);
     createActions();
     createMenuBar();
+    createStatusBar();
     this->newGame(10,10,10);    //start a new game by default
 }
 void MainWindow::createBoard(int row, int col){
@@ -87,18 +88,19 @@ void MainWindow::createBoard(int row, int col){
 void MainWindow::updateGUI(bool rebuildBoard){
     int row=this->gl->getRow(),col=this->gl->getCol();
     if(rebuildBoard){
-        this->setFixedSize(col*20,row*20+this->menuBar()->sizeHint().height());
-        //this->resize(col*20,row*20+this->menuBar()->sizeHint().height());
+        this->setFixedSize(col*20,row*20+menuBar()->sizeHint().height()
+                           +statusBar()->sizeHint().height());
     }
     for(int i =0;i<row;i++)
         for(int j=0;j<col;j++){
-            MsButton* b=buttons[i][j];
-            Cell& c=gl->getCell(i,j);
-            if(boardCopy[i][j]!=c){
-                b->setIcon(IconFactory::getInstance()->getIcon(c));
-                boardCopy[i][j]=c;
-            }
+        MsButton* b=buttons[i][j];
+        Cell& c=gl->getCell(i,j);
+        if(boardCopy[i][j]!=c){
+            b->setIcon(IconFactory::getInstance()->getIcon(c));
+            boardCopy[i][j]=c;
         }
+    }
+    updateStatusBar();
 }
 void MainWindow::newGame(int row, int col,int num){
     /**initialize static variables**/
@@ -154,7 +156,7 @@ void MainWindow::raiseNeighbourWidgets(int i, int j){
     }
     //this->updateGUI();
 }
-void MainWindow::sunkWidgetsIfUnknown(int i, int j){
+void MainWindow::sinkWidgetsIfUnknown(int i, int j){
     if(gl->getCell(i,j).getState()==Cell::UNKNOWN)
         buttons[i][j]->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));
 }
@@ -162,7 +164,7 @@ void MainWindow::raiseWidgetsIfUnknown(int i, int j){
     if(gl->getCell(i,j).getState()==Cell::UNKNOWN)
         buttons[i][j]->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0));
 }
-void MainWindow::sunkNeighbourWidgets(int i, int j){
+void MainWindow::sinkNeighbourWidgets(int i, int j){
     Board::LocationList lst=this->gl->getNeighbours(i,j);
     for(size_t k=0;k<lst.size();k++){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
@@ -175,4 +177,18 @@ void MainWindow::aboutSlot(){
     QMessageBox::about(this,tr("About"),tr("<h2>QMineSweeper</h2>"
                                            "<p>This is a mine sweeper game implemented in QT</p>"
                                            "<p>This is part of br-minesweeper project.</p>"));
+}
+void MainWindow::createStatusBar(){
+    mineNumLabel=new QLabel(this);
+    this->statusBar()->addWidget(mineNumLabel);
+}
+void MainWindow::updateStatusBar(){
+    int num=gl->getNum(),marked=gl->getMarkedNum();
+    if(marked==-1)
+        mineNumLabel->setText(tr("Game stopped"));
+    else{
+        int remaining=num-marked;
+        mineNumLabel->setText(tr(std::string("Remaining Mines: "+
+                                             str(remaining)).c_str()));
+    }
 }

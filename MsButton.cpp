@@ -8,12 +8,12 @@ MsButton::MsButton(QWidget* parent,int _i, int _j)
 void MsButton::mousePressEvent(QMouseEvent *e){
     try{
         if(e->button()==Qt::LeftButton){
-            gui->sunkWidgetsIfUnknown(i,j);
+            gui->sinkWidgetsIfUnknown(i,j);
             if(state==0)
                 state=1;
             else if(state==2){
                 state=3;
-                gui->sunkNeighbourWidgets(i,j);
+                gui->sinkNeighbourWidgets(i,j);
             }
         }else if(e->button()==Qt::RightButton){
             if(state==0){
@@ -21,7 +21,7 @@ void MsButton::mousePressEvent(QMouseEvent *e){
                 gui->toggle(i,j);
             }else if(state==1){
                 state=3;
-                gui->sunkNeighbourWidgets(i,j);
+                gui->sinkNeighbourWidgets(i,j);
             }
         }
     }catch(std::exception e){

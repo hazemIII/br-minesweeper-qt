@@ -97,3 +97,17 @@ int GameLogic::getCol(){
 Board::LocationList GameLogic::getNeighbours(int i, int j){
     return this->board->getNeighbours(i,j);
 }
+int GameLogic::getMarkedNum(){
+    //  count one by one...
+    //  maybe not efficient,
+    //  but I don't want to bring trouble to later maintainence
+    //  because keeping track of a counting variable in multiple functions is difficult
+    if(getState()!=GameLogic::RUN)
+        return -1;
+    int res=0;
+    for(int i=0;i<this->getRow();i++)
+        for(int j=0;j<this->getCol();j++)
+            if(getCell(i,j).getState()==Cell::MARKED)
+                res++;
+    return res;
+}

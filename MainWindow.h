@@ -17,17 +17,19 @@ public:
     void unmark(int i,int j);
     void explore(int i,int j);
     void toggle(int i,int j);
-    void sunkNeighbourWidgets(int i,int j);
-    void sunkWidgetsIfUnknown(int i,int j);
+    void sinkNeighbourWidgets(int i,int j);
+    void sinkWidgetsIfUnknown(int i,int j);
     void raiseNeighbourWidgets(int i,int j);
     void raiseWidgetsIfUnknown(int i,int j);
 
+    void createStatusBar();
     void createBoard(int row,int col);
     void createGameLogic();
     void initializeWidgets();
     void createMenuBar();
     void createActions();
     void checkWinLose();
+    void updateStatusBar();
 private:
     std::vector<std::vector<MsButton*> > buttons;
     std::vector<std::vector<Cell> > boardCopy;
@@ -40,6 +42,7 @@ private:
     QAction *aboutAction;
     QMenu* gameMenu;
     QMenu* helpMenu;
+    QLabel* mineNumLabel;
 public slots:
     void newGameSlot();
     void aboutSlot();

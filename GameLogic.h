@@ -8,7 +8,7 @@ class GameLogic{
 protected:
     Board *board;
     int state;
-    int num;
+    int num;        //mine number in the board
 
     void floodFillDig(int i,int j);
     void revealAll();
@@ -28,6 +28,7 @@ public:
     int getRow() ;
     int getCol() ;
     int getNum() ;
+    int getMarkedNum() ;
     int getState();
     Cell& getCell(int i,int j);
     std::string cheat();
