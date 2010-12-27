@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
 }
 void MainWindow::createBoard(int row, int col){
     this->frame=new QFrame(this->central);
-    this->frame->setGeometry(QRect(0,0,20*row,20*col));
+    this->frame->setGeometry(QRect(0,0,20*col,20*row));
     buttons.clear();
     buttons.resize(row);
     for(int i=0;i<row;i++)
@@ -137,7 +137,7 @@ void MainWindow::explore(int i, int j){
 }
 void MainWindow::raiseNeighbourWidgets(int i, int j){
     Board::LocationList lst=this->gl->getNeighbours(i,j);
-    for(int k=0;k<lst.size();k++){
+    for(size_t k=0;k<lst.size();k++){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
         if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN){
             b->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0));
@@ -147,7 +147,7 @@ void MainWindow::raiseNeighbourWidgets(int i, int j){
 }
 void MainWindow::sunkNeighbourWidgets(int i, int j){
     Board::LocationList lst=this->gl->getNeighbours(i,j);
-    for(int k=0;k<lst.size();k++){
+    for(size_t k=0;k<lst.size();k++){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
         if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN){
             b->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));

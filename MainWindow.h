@@ -28,6 +28,8 @@ public:
     void checkWinLose();
 private:
     std::vector<std::vector<MsButton*> > buttons;
+    //  std::vector<std::vector<Cell> > boardCopy;
+    //  keep a copy of the board for update checking, reduce GUI updating time.
     GameLogic *gl;
     QWidget *central;
     QFrame *frame;
