@@ -71,10 +71,15 @@ void MainWindow::createBoard(int row, int col){
     buttons.resize(row);
     for(int i=0;i<row;i++)
         buttons[i].resize(col);
+    boardCopy.clear();
+    boardCopy.resize(row);;
+    for(int i=0;i<row;i++)
+        boardCopy[i].resize(col);
     for(int i=0;i<row;i++){
         for(int j=0;j<col;j++){
             MsButton *b=new MsButton(this->frame,i,j);
             b->setGeometry(QRect(j*20,i*20,21,21));
+            b->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0)); //initialize icon
             buttons[i][j]=b;
         }
     }
@@ -88,7 +93,11 @@ void MainWindow::updateGUI(bool rebuildBoard){
     for(int i =0;i<row;i++)
         for(int j=0;j<col;j++){
             MsButton* b=buttons[i][j];
-            b->setIcon(IconFactory::getInstance()->getIcon(gl->getCell(i,j)));
+            Cell& c=gl->getCell(i,j);
+            if(boardCopy[i][j]!=c){
+                b->setIcon(IconFactory::getInstance()->getIcon(c));
+                boardCopy[i][j]=c;
+            }
         }
 }
 void MainWindow::newGame(int row, int col,int num){

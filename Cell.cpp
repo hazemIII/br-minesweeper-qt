@@ -1,6 +1,12 @@
 #include"Cell.h"
 #include<sstream>
 Cell::Cell():value(0),state(UNKNOWN){}
+bool Cell::operator ==(const Cell& c)const{
+    return state==c.state && value == c.value;
+}
+bool Cell::operator !=(const Cell& c)const{
+    return !(*this == c);
+}
 bool Cell::validState(int state){
     return state==MARKED || state==KNOWN || state==UNKNOWN;
 }

@@ -17,6 +17,8 @@ public:
         UNKNOWN=2,
         KNOWN=3,
     };
+    bool operator==(const Cell& c)const;
+    bool operator!=(const Cell& c)const;
     bool validState(int state);
     bool validValue(int value);
     int getValue();
