@@ -18,7 +18,9 @@ public:
     void explore(int i,int j);
     void toggle(int i,int j);
     void sunkNeighbourWidgets(int i,int j);
+    void sunkWidgetsIfUnknown(int i,int j);
     void raiseNeighbourWidgets(int i,int j);
+    void raiseWidgetsIfUnknown(int i,int j);
 
     void createBoard(int row,int col);
     void createGameLogic();

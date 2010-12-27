@@ -8,6 +8,7 @@ MsButton::MsButton(QWidget* parent,int _i, int _j)
 void MsButton::mousePressEvent(QMouseEvent *e){
     try{
         if(e->button()==Qt::LeftButton){
+            gui->sunkWidgetsIfUnknown(i,j);
             if(state==0)
                 state=1;
             else if(state==2){
@@ -30,6 +31,7 @@ void MsButton::mousePressEvent(QMouseEvent *e){
 void MsButton::mouseReleaseEvent(QMouseEvent *e){
     try{
         if(e->button()==Qt::LeftButton){
+            gui->raiseWidgetsIfUnknown(i,j);
             if(state==1){
                 state=0;
                 gui->dig(i,j);

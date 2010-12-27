@@ -154,13 +154,20 @@ void MainWindow::raiseNeighbourWidgets(int i, int j){
     }
     //this->updateGUI();
 }
+void MainWindow::sunkWidgetsIfUnknown(int i, int j){
+    if(gl->getCell(i,j).getState()==Cell::UNKNOWN)
+        buttons[i][j]->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));
+}
+void MainWindow::raiseWidgetsIfUnknown(int i, int j){
+    if(gl->getCell(i,j).getState()==Cell::UNKNOWN)
+        buttons[i][j]->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0));
+}
 void MainWindow::sunkNeighbourWidgets(int i, int j){
     Board::LocationList lst=this->gl->getNeighbours(i,j);
     for(size_t k=0;k<lst.size();k++){
         MsButton* b=this->buttons[lst[k].first][lst[k].second];
-        if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN){
+        if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN)
             b->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));
-        }
     }
     //this->updateGUI();    //should not update here, or else sunken fails immediately
 }
