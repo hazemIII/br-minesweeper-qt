@@ -3,7 +3,8 @@
 
 
 #include"util.h"
-class Cell{
+
+class Cell {
 private:
     int value;                  //  value of the cell, can be 0-8, or -1(mine)
     int state;                  //  state value, can be MARKED,KNOWN or UNKNOWN

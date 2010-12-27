@@ -3,8 +3,7 @@
 GameLogic::GameLogic():board(0),state(STOP){}
 
 Cell& GameLogic::getCell(int i, int j){
-    if(!board)
-        throw std::runtime_error("Board has not been constructed yet");
+    if(!board) throw std::runtime_error("Board has not been constructed yet");
     return board->getCell(i,j);
 }
 int GameLogic::getState(){
@@ -21,6 +20,7 @@ void GameLogic::newGame(int row, int col, const Board::LocationList &lst){
     this->num=lst.size();
     board=new Board(row,col,lst);
     setState(RUN);
+    //emit this->boardChangedSignal();
 }
 void GameLogic::newGame(int row, int col, int num){
     if(row < Board::MIN_ROW_NUM || col < Board::MIN_COLUMN_NUM
@@ -32,6 +32,7 @@ void GameLogic::newGame(int row, int col, int num){
     this->num=num;
     board=new Board(row,col,num);
     setState(RUN);
+    //emit this->boardChangedSignal();
 }
 int GameLogic::getNum(){
     return num;
@@ -87,6 +88,7 @@ void GameLogic::revealAll(){
     for(int i=0;i<board->getRow();i++)
         for(int j=0;j<board->getCol();j++)
             this->getCell(i,j).setState(Cell::KNOWN);
+    //emit this->boardChangedSignal();
 }
 int GameLogic::getRow(){
     return board->getRow();

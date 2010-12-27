@@ -20,15 +20,17 @@ int Cell::getValue(){
     return this->value;
 }
 void Cell::setState(int new_state){
-    if(this->validState(new_state))
-        this->state=new_state;
-    else
+    if(this->validState(new_state)){
+        if(new_state!=this->state)
+            this->state=new_state;
+    }else
         throw std::invalid_argument("invalid state value: "+str(new_state));
 }
 void Cell::setValue(int new_value){
-    if(this->validValue(new_value))
-        this->value=new_value;
-    else
+    if(this->validValue(new_value)){
+        if(new_value!=this->value)
+            this->value=new_value;
+    }else
         throw std::invalid_argument("invalid");
 }
 std::string Cell::toString(){

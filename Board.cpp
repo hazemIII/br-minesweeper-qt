@@ -4,18 +4,22 @@
 Board::Board(int row, int col, int num){
     this->row=row;
     this->col=col;
-    board=new Cell*[row];
+    board.clear();
+    board.resize(row);
     for(int i=0;i<row;i++)
-        board[i]=new Cell[col];
+        for(int j=0;j<col;j++)
+            board[i].push_back(new Cell());
     this->randomlyFillMines(num);
     this->setupValues();
 }
 Board::Board(int row, int col, const LocationList &lst){
     this->row=row;
     this->col=col;
-    board=new Cell*[row];
+    board.clear();
+    board.resize(row);
     for(int i=0;i<row;i++)
-        board[i]=new Cell[col];
+        for(int j=0;j<col;j++)
+            board[i].push_back(new Cell());
     this->fillMineByLocationList(lst);
     this->setupValues();
 }
@@ -29,9 +33,9 @@ void Board::setupValues(){
             LocationList lst=this->getNeighbours(i,j);
             for(size_t k=0;k<lst.size();k++){
                 Location &p=lst[k];
-                Cell& c=board[p.first][p.second];
-                if(c.getValue()!=Cell::MINE)
-                    c.setValue(c.getValue()+1);
+                Cell* c=board[p.first][p.second];
+                if(c->getValue()!=Cell::MINE)
+                    c->setValue(c->getValue()+1);
             }
         }
     }
@@ -46,8 +50,8 @@ void Board::randomlyFillMines(int num){
         do{
             i=randInt(0,row-1);
             j=randInt(0,col-1);
-        }while(board[i][j].getValue()==Cell::MINE);
-        board[i][j].setValue(Cell::MINE);
+        }while(board[i][j]->getValue()==Cell::MINE);
+        board[i][j]->setValue(Cell::MINE);
     }
 }
 /**
@@ -56,17 +60,18 @@ void Board::randomlyFillMines(int num){
 void Board::fillMineByLocationList(const LocationList &lst){
     for(size_t i=0;i<lst.size();i++){
         const Location &p=lst[i];
-        board[p.first][p.second].setValue(Cell::MINE);
+        board[p.first][p.second]->setValue(Cell::MINE);
     }
 }
 Board::~Board(){
     for(int i=0;i<row;i++)
-        delete[] board[i];
-    delete[] board;
+        for(int j=0;j<col;j++)
+            delete board[i][j];
+    board.clear();
 }
 Cell& Board::getCell(int i, int j){
     if(this->validCoordinate(i,j))
-        return board[i][j];
+        return *board[i][j];
     else{
         printErr("try to get cell from invalid coordinate");
         exit(-1);
@@ -91,7 +96,7 @@ std::string Board::toString(){
     for(int i=0;i<row;i++){
         res<<std::setw(3)<<std::left<<i<<std::setw(0);
         for(int j=0;j<col;j++)
-            res<<board[i][j].toString();
+            res<<board[i][j]->toString();
         res<<"\n";
     }
     return res.str();

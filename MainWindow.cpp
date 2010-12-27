@@ -64,18 +64,20 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     createMenuBar();
     createStatusBar();
     this->newGame(10,10,10);    //start a new game by default
+
+    connect(this->gl,SIGNAL(winSignal()),this,SLOT(winSlot()));
+    connect(this->gl,SIGNAL(loseSignal()),this,SLOT(loseSlot()));
 }
 void MainWindow::createBoard(int row, int col){
     this->frame=new QFrame(this->central);
     this->frame->setGeometry(QRect(0,0,20*col,20*row));
     buttons.clear();
     buttons.resize(row);
-    for(int i=0;i<row;i++)
+    boardCopy.resize(row);
+    for(int i=0;i<row;i++){
         buttons[i].resize(col);
-    boardCopy.clear();
-    boardCopy.resize(row);;
-    for(int i=0;i<row;i++)
         boardCopy[i].resize(col);
+    }
     for(int i=0;i<row;i++){
         for(int j=0;j<col;j++){
             MsButton *b=new MsButton(this->frame,i,j);
@@ -110,25 +112,24 @@ void MainWindow::newGame(int row, int col,int num){
     this->gl->newGame(row,col,num);
     this->updateGUI(true);
 }
-void MainWindow::checkWinLose(){
-    if(this->gl->checkWin()){
-        QMessageBox::information(this,"You Win!",
-                                 tr("<h3>Congratulations! You win!</h3>"));
-    }else if(this->gl->checkLose()){
-        QMessageBox::information(this,"You Lose",
-                                 tr("<h3>Sorry, You lose.</h3>"
-                                    "<p>better luck next time</p>"));
-    }
+void MainWindow::winSlot(){
+    this->updateGUI();
+    QMessageBox::information(this,"You Win!",
+                             tr("<h3>Congratulations! You win!</h3>"));
+}
+void MainWindow::loseSlot(){
+    this->updateGUI();
+    QMessageBox::information(this,"You Lose",
+                             tr("<h3>Sorry, You lose.</h3>"
+                                "<p>better luck next time</p>"));
 }
 void MainWindow::dig(int i, int j){
     this->gl->dig(i,j);
     this->updateGUI();
-    this->checkWinLose();
 }
 void MainWindow::mark(int i, int j){
     this->gl->mark(i,j);
     this->updateGUI();
-    this->checkWinLose();
 }
 void MainWindow::unmark(int i, int j){
     this->gl->unmark(i,j);
@@ -144,7 +145,6 @@ void MainWindow::toggle(int i, int j){
 void MainWindow::explore(int i, int j){
     this->gl->explore(i,j);
     this->updateGUI();
-    this->checkWinLose();
 }
 void MainWindow::raiseNeighbourWidgets(int i, int j){
     Board::LocationList lst=this->gl->getNeighbours(i,j);
@@ -154,7 +154,6 @@ void MainWindow::raiseNeighbourWidgets(int i, int j){
             b->setIcon(IconFactory::getInstance()->getIcon(Cell::UNKNOWN,0));
         }
     }
-    //this->updateGUI();
 }
 void MainWindow::sinkWidgetsIfUnknown(int i, int j){
     if(gl->getCell(i,j).getState()==Cell::UNKNOWN)
@@ -171,7 +170,6 @@ void MainWindow::sinkNeighbourWidgets(int i, int j){
         if(this->gl->getCell(lst[k].first,lst[k].second).getState()==Cell::UNKNOWN)
             b->setIcon(IconFactory::getInstance()->getIcon(Cell::KNOWN,0));
     }
-    //this->updateGUI();    //should not update here, or else sunken fails immediately
 }
 void MainWindow::aboutSlot(){
     QMessageBox::about(this,tr("About"),tr("<h2>QMineSweeper</h2>"

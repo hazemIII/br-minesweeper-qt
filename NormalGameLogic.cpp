@@ -16,11 +16,14 @@ void NormalGameLogic::dig(int i, int j){
         else
             c.setState(Cell::KNOWN);
     }
-    if(this->checkWin())
+    //emit this->boardChangedSignal();
+    if(this->checkWin()){
         this->setState(GameLogic::WIN);
-    else if(this->checkLose()){
+        emit this->winSignal();
+    }else if(this->checkLose()){
         this->revealAll();
         this->setState(GameLogic::LOSE);
+        emit this->loseSignal();
     }
 }
 void NormalGameLogic::mark(int i, int j){
@@ -35,8 +38,11 @@ void NormalGameLogic::mark(int i, int j){
         printErr("Can only mark UNKNOWN cells\n");
     else
         c.setState(Cell::MARKED);
-    if(this->checkWin())
+    //emit this->boardChangedSignal();
+    if(this->checkWin()){
         this->setState(GameLogic::WIN);
+        emit this->winSignal();
+    }
 }
 void NormalGameLogic::unmark(int i, int j){
     if(state!=GameLogic::RUN)
@@ -49,6 +55,7 @@ void NormalGameLogic::unmark(int i, int j){
         printErr("Can only unmark MARKED cells\n");
     else
         c.setState(Cell::UNKNOWN);
+    //emit this->boardChangedSignal();
 }
 void NormalGameLogic::explore(int i, int j){
     if(state!=GameLogic::RUN)
@@ -65,6 +72,7 @@ void NormalGameLogic::explore(int i, int j){
         else
             printErr("Marked neighbour number is not correct\n");
     }
+    //emit this->boardChangedSignal();
 }
 bool NormalGameLogic::markedNeighboursNumberOK(int i, int j){
     Board::LocationList lst=board->getNeighbours(i,j);

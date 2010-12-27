@@ -3,8 +3,10 @@
 
 #include"Board.h"
 #include"util.h"
+#include<QObject>
 
-class GameLogic{
+class GameLogic : public QObject{
+    Q_OBJECT
 protected:
     Board *board;
     int state;
@@ -42,7 +44,10 @@ public:
     virtual bool checkWin()=0;
     virtual bool checkLose()=0;
     /******* rule dependent part ************/
-
+signals:
+    void winSignal();
+    void loseSignal();
+    //void boardChangedSignal();
 };
 
 #endif // GAMELOGIC_H

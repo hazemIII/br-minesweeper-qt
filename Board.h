@@ -13,8 +13,8 @@ public:
     const static int MIN_ROW_NUM=3;
     const static int MIN_COLUMN_NUM=3;
 private:
-    int row,col;    //  size of the board
-    Cell** board;
+    int row,col;                            //  size of the board
+    std::vector<std::vector<Cell*> > board;
     void randomlyFillMines(int num);
     void fillMineByLocationList(const LocationList& lst);
     void setupValues();

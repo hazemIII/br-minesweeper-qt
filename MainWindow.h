@@ -28,12 +28,10 @@ public:
     void initializeWidgets();
     void createMenuBar();
     void createActions();
-    void checkWinLose();
     void updateStatusBar();
 private:
     std::vector<std::vector<MsButton*> > buttons;
     std::vector<std::vector<Cell> > boardCopy;
-    //  keep a copy of the board for update checking, reduce GUI updating time.
     GameLogic *gl;
     QWidget *central;
     QFrame *frame;
@@ -46,6 +44,8 @@ private:
 public slots:
     void newGameSlot();
     void aboutSlot();
+    void winSlot();
+    void loseSlot();
 };
 
 #endif // MAINWINDOW_H
