@@ -12,10 +12,10 @@ public:
     AIThread(AIPlayer* p);
     ~AIThread();
     void stop();
+    volatile bool stopped;
 protected:
     void run();
 private:
-    volatile bool stopped;
     AIPlayer* p;
 };
 class MainWindow;   //forward declaration
@@ -26,6 +26,8 @@ private:
 public:
     AIPlayer(QString name, CompeteGameLogic * gl,MainWindow* win); //main window to connect signal
     ~AIPlayer();
+    void start();
+    void stop();
     void makeMove(int i=-1,int j=-1);
 };
 

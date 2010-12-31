@@ -13,8 +13,34 @@ void MainWindow::newGameSlot(){
         int col=d.columnText->text().toInt();
         int num=d.mineText->text().toInt();
         try{
-            this->newGame(row,col,num);
-        }catch(std::exception e){
+            if(d.normalMode->isChecked()){
+                if(!this->isNormalMode())this->createNormalGameLogic();
+                this->newGame(row,col,num);
+            }else if(d.competeMode->isChecked()){
+                if(!this->isCompeteMode())this->createCompeteGameLogic();
+                CompeteGameLogic * gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+                Player *p1,*p2;
+                if(d.p1=="Human")
+                    p1=new HumanPlayer("Player1",gl_cpt);
+                else if(d.p1=="AI")
+                    p1=new AIPlayer("Player1",gl_cpt,this);
+                else
+                    throw std::logic_error(std::string("Unknown player: ")+qPrintable(d.p1));
+
+                if(d.p2=="Human")
+                    p2=new HumanPlayer("Player2",gl_cpt);
+                else if(d.p2=="AI")
+                    p2=new AIPlayer("Player2",gl_cpt,this);
+                else
+                    throw std::logic_error(std::string("Unknown player: ")+qPrintable(d.p2));
+
+                gl_cpt->setPlayer(1,p1);
+                gl_cpt->setPlayer(2,p2);
+                this->newGame(row,col,num);
+            }else{
+                throw std::logic_error("unknown mode? WTF?");
+            }
+        }catch(std::exception ){
             QMessageBox::warning(this,tr("Invalid input"),
                                  tr(("<h4>Invalid input encountered</h4>"
                                      "<ul>"
@@ -26,15 +52,19 @@ void MainWindow::newGameSlot(){
         }
     }
 }
-void MainWindow::createGameLogic(){
+void MainWindow::createCompeteGameLogic(){
+    if(gl)delete gl;
     gl=new CompeteGameLogic();
-    CompeteGameLogic * gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
-    gl_cpt->setPlayer(1,new HumanPlayer("player1",gl_cpt));
-    gl_cpt->setPlayer(2,new AIPlayer("player2",gl_cpt,this));
 
-    //this->gl=new NormalGameLogic();
+    connect(this->gl,SIGNAL(winSignal()),this,SLOT(winSlot()));
+    connect(this->gl,SIGNAL(loseSignal()),this,SLOT(loseSlot()));
+}
+void MainWindow::createNormalGameLogic(){
+    if(gl)delete gl;
+    this->gl=new NormalGameLogic();
 
-    connect(gl,SIGNAL(boardChangedSignal()),this,SLOT(updateSlot()));
+    connect(this->gl,SIGNAL(winSignal()),this,SLOT(winSlot()));
+    connect(this->gl,SIGNAL(loseSignal()),this,SLOT(loseSlot()));
 }
 void MainWindow::initializeWidgets(){
     this->central=new QWidget(this);
@@ -69,7 +99,8 @@ void MainWindow::createActions(){
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     this->move(300,200);
     this->setWindowIcon(QIcon(":/images/img/logo.png"));
-    createGameLogic();
+    gl=0;
+    createNormalGameLogic();
     initializeWidgets();
     createBoard(Board::MAX_ROW_NUM,Board::MAX_COLUMN_NUM);
     createActions();
@@ -77,8 +108,6 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     createStatusBar();
     this->newGame(10,10,10);    //start a new game by default
 
-    connect(this->gl,SIGNAL(winSignal()),this,SLOT(winSlot()));
-    connect(this->gl,SIGNAL(loseSignal()),this,SLOT(loseSlot()));
 }
 void MainWindow::createBoard(int row, int col){
     this->frame=new QFrame(this->central);
@@ -266,8 +295,10 @@ void MainWindow::updateStatusBar(){
     }
 }
 bool MainWindow::isNormalMode(){
-    return dynamic_cast<NormalGameLogic*>(this->gl)!=0;
+    if(!gl)return false;
+    return dynamic_cast<NormalGameLogic*>(gl)!=0;
 }
 bool MainWindow::isCompeteMode(){
-    return dynamic_cast<CompeteGameLogic*>(this->gl)!=0;
+    if(!gl)return false;
+    return dynamic_cast<CompeteGameLogic*>(gl)!=0;
 }

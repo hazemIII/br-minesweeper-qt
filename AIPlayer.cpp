@@ -3,15 +3,13 @@
 #include"MainWindow.h"
 
 AIThread::AIThread(AIPlayer* p){
-    this->stopped=false;
+    this->stopped=true;
     this->p=p;
 }
 AIThread::~AIThread(){
-    stop();
+    stopped=true;
 }
-void AIThread::stop(){
-    this->stopped=true;
-}
+
 void AIThread::run(){
     while(!stopped)
         p->makeMove();
@@ -34,13 +32,19 @@ void AIPlayer::makeMove(int , int ){
         for(int i=0;i<gl->getRow();i++)
             for(int j=0;j<gl->getCol();j++)
                 if(gl->getCell(i,j).getState()==Cell::UNKNOWN){
-                    this->gl->dig(i,j);
-                    if(gl->getCell(i,j).getValue()!=Cell::MINE)
-                        this->gl->switchTurn();
-                    win->updateGUI();
-                    return;
-                }
+            this->gl->dig(i,j);
+            if(gl->getCell(i,j).getValue()!=Cell::MINE)
+                this->gl->switchTurn();
+            win->updateGUI();
+            return;
+        }
     }catch(std::exception e){
         printErr("exception when human player is trying to make a move..");
     }
+}
+void AIPlayer::start(){
+    thread->stopped=false;
+}
+void AIPlayer::stop(){
+    thread->stopped=true;
 }

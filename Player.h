@@ -11,7 +11,6 @@ public:
     Player(QString name, CompeteGameLogic * gl);
     virtual void makeMove(int i=-1,int j=-1)=0;   //for human player, dig (i,j); for AI player, i and j are ignored
     int getScore();
-    void clearScore();
     QString getName();
     void increaseScore();
 protected:

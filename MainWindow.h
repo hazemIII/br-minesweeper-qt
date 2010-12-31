@@ -5,7 +5,6 @@
 #include"GameLogic.h"
 #include"MsButton.h"
 #include<vector>
-#include"Player.h"
 
 class MainWindow: public QMainWindow{
     Q_OBJECT
@@ -25,7 +24,8 @@ public:
 
     void createStatusBar();
     void createBoard(int row,int col);
-    void createGameLogic();
+    void createNormalGameLogic();
+    void createCompeteGameLogic();
     void initializeWidgets();
     void createMenuBar();
     void createActions();

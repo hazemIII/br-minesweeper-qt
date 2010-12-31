@@ -1,4 +1,5 @@
 #include"CompeteGameLogic.h"
+#include"AIPlayer.h"
 
 CompeteGameLogic::CompeteGameLogic(){
     this->p1=0;
@@ -6,6 +7,7 @@ CompeteGameLogic::CompeteGameLogic(){
     this->turn=p1;
 }
 void CompeteGameLogic::setPlayer(int idx, Player *p){
+    if(isAIPlayer(p))dynamic_cast<AIPlayer*>(p)->start();
     if(idx==1)
         p1=p;
     else if(idx==2)
@@ -39,6 +41,8 @@ void CompeteGameLogic::dig(int i, int j){
     if(this->checkWin()){
         this->setState(GameLogic::WIN);
         this->revealAll();
+        if(isAIPlayer(p1))dynamic_cast<AIPlayer*>(p1)->stop();
+        if(isAIPlayer(p2))dynamic_cast<AIPlayer*>(p2)->stop();
         emit this->winSignal();
     }
 }
@@ -81,4 +85,8 @@ void CompeteGameLogic::newGame(int row, int col, const Board::LocationList &lst)
     if(!p1 || !p2)throw std::logic_error("some player is not set yet");
     turn=p1;
     GameLogic::newGame(row,col,lst);
+}
+bool CompeteGameLogic::isAIPlayer(Player *p){
+    if(!p)return false;
+    return dynamic_cast<AIPlayer*>(p)!=0;
 }

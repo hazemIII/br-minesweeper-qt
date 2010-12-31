@@ -8,4 +8,3 @@ Player::Player(QString name, CompeteGameLogic *gl){
 int Player::getScore(){return score;}
 QString Player::getName(){return name;}
 void Player::increaseScore(){score++;}
-void Player::clearScore(){score=0;}

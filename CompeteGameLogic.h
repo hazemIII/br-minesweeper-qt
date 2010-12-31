@@ -17,6 +17,7 @@ public:
     Player* getCurrentPlayer();
     void newGame(int row, int col, const Board::LocationList &lst);     //override to initialize players
     void newGame(int row, int col, int num);                            //override to initialize players
+    bool isAIPlayer(Player *p);
 
     virtual void dig(int i,int j);
     virtual void mark(int i,int j);
