@@ -1,6 +1,7 @@
 #include"Cell.h"
 #include<sstream>
-Cell::Cell():value(0),state(UNKNOWN){}
+Cell::Cell():value(0),state(UNKNOWN){
+}
 bool Cell::operator ==(const Cell& c)const{
     return state==c.state && value == c.value;
 }
@@ -21,15 +22,17 @@ int Cell::getValue(){
 }
 void Cell::setState(int new_state){
     if(this->validState(new_state)){
-        if(new_state!=this->state)
+        if(new_state!=this->state){
             this->state=new_state;
+        }
     }else
         throw std::invalid_argument("invalid state value: "+str(new_state));
 }
 void Cell::setValue(int new_value){
     if(this->validValue(new_value)){
-        if(new_value!=this->value)
+        if(new_value!=this->value){
             this->value=new_value;
+        }
     }else
         throw std::invalid_argument("invalid");
 }

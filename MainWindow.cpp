@@ -1,6 +1,11 @@
 #include"MainWindow.h"
 #include"IconFactory.h"
+#include"HumanPlayer.h"
+#include"AIPlayer.h"
 #include"NewGameDialog.h"
+#include"CompeteGameLogic.h"
+#include"NormalGameLogic.h"
+
 void MainWindow::newGameSlot(){
     NewGameDialog d(this->gl->getRow(),this->gl->getCol(),this->gl->getNum());
     if(d.exec()){
@@ -22,7 +27,14 @@ void MainWindow::newGameSlot(){
     }
 }
 void MainWindow::createGameLogic(){
-    this->gl=new NormalGameLogic();
+    gl=new CompeteGameLogic();
+    CompeteGameLogic * gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+    gl_cpt->setPlayer(1,new HumanPlayer("player1",gl_cpt));
+    gl_cpt->setPlayer(2,new AIPlayer("player2",gl_cpt,this));
+
+    //this->gl=new NormalGameLogic();
+
+    connect(gl,SIGNAL(boardChangedSignal()),this,SLOT(updateSlot()));
 }
 void MainWindow::initializeWidgets(){
     this->central=new QWidget(this);
@@ -114,36 +126,92 @@ void MainWindow::newGame(int row, int col,int num){
 }
 void MainWindow::winSlot(){
     this->updateGUI();
-    QMessageBox::information(this,"You Win!",
-                             tr("<h3>Congratulations! You win!</h3>"));
+    if(this->isNormalMode()){
+        QMessageBox::information(this,"You Win!",
+                                 tr("<h3>Congratulations! You win!</h3>"));
+    }else if(this->isCompeteMode()){
+        CompeteGameLogic* gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+        Player* p1=gl_cpt->getPlayer(1),*p2=gl_cpt->getPlayer(2);
+        Player* winner=0;
+        if(p1->getScore() > p2->getScore())
+            winner=p1;
+        else if(p1->getScore() < p2->getScore())
+            winner=p2;
+        QString title,content;
+        if(!winner)
+            title="Draw!";
+        else
+            title=winner->getName()+" wins!";
+        content="<h3>"+title+"</h3>"+
+                QString("<p>Final Score: %1 - %2</p>").arg(p1->getScore()).arg(p2->getScore());
+        QMessageBox::information(this,title,content);
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
 }
 void MainWindow::loseSlot(){
     this->updateGUI();
-    QMessageBox::information(this,"You Lose",
-                             tr("<h3>Sorry, You lose.</h3>"
-                                "<p>better luck next time</p>"));
+    if(this->isNormalMode()){
+        QMessageBox::information(this,"You Lose",
+                                 tr("<h3>Sorry, You lose.</h3>"
+                                    "<p>better luck next time</p>"));
+    }else if(this->isCompeteMode()){
+        throw std::logic_error("compete mode has no lose slot");
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
 }
 void MainWindow::dig(int i, int j){
-    this->gl->dig(i,j);
+    if(this->isNormalMode()){
+        this->gl->dig(i,j);
+    }else if(this->isCompeteMode()){
+        dynamic_cast<CompeteGameLogic*>(gl)->getCurrentPlayer()->makeMove(i,j);
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
     this->updateGUI();
 }
 void MainWindow::mark(int i, int j){
-    this->gl->mark(i,j);
+    if(this->isNormalMode()){
+        this->gl->mark(i,j);
+    }else if(this->isCompeteMode()){
+        //  do nothing, mark is not supported in compete mode
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
     this->updateGUI();
 }
 void MainWindow::unmark(int i, int j){
-    this->gl->unmark(i,j);
+    if(this->isNormalMode()){
+        this->gl->unmark(i,j);
+    }else if(this->isCompeteMode()){
+        //  do nothing, unmark is not supported in compete mode
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
     this->updateGUI();
 }
 void MainWindow::toggle(int i, int j){
-    int s=this->gl->getCell(i,j).getState();
-    if(s==Cell::MARKED)
-        this->unmark(i,j);
-    else if(s==Cell::UNKNOWN)
-        this->mark(i,j);
+    if(this->isNormalMode()){
+        int s=this->gl->getCell(i,j).getState();
+        if(s==Cell::MARKED)
+            this->unmark(i,j);
+        else if(s==Cell::UNKNOWN)
+            this->mark(i,j);
+    }else if(this->isCompeteMode()){
+        //  do nothing, toggle is not supported in compete mode
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
 }
 void MainWindow::explore(int i, int j){
-    this->gl->explore(i,j);
+    if(this->isNormalMode()){
+        this->gl->explore(i,j);
+    }else if(this->isCompeteMode()){
+        //  do nothing, unmark is not supported in compete mode
+    }else{
+        throw std::logic_error("Unknown game mode");
+    }
     this->updateGUI();
 }
 void MainWindow::raiseNeighbourWidgets(int i, int j){
@@ -181,12 +249,25 @@ void MainWindow::createStatusBar(){
     this->statusBar()->addWidget(mineNumLabel);
 }
 void MainWindow::updateStatusBar(){
-    int num=gl->getNum(),marked=gl->getMarkedNum();
-    if(marked==-1)
+    if(gl->getState()!=GameLogic::RUN)
         mineNumLabel->setText(tr("Game stopped"));
     else{
-        int remaining=num-marked;
-        mineNumLabel->setText(tr(std::string("Remaining Mines: "+
-                                             str(remaining)).c_str()));
+        if(this->isNormalMode()){
+            int num=gl->getNum(),marked=gl->getMarkedNum();
+            int remaining=num-marked;
+            mineNumLabel->setText(tr(std::string("Remaining Mines: "+
+                                                 str(remaining)).c_str()));
+        }else if(this->isCompeteMode()){
+            CompeteGameLogic* gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+            QString content=QString("%1's turn  Score: %2-%3").arg(gl_cpt->getCurrentPlayer()->getName())
+                            .arg(gl_cpt->getPlayer(1)->getScore()).arg(gl_cpt->getPlayer(2)->getScore());
+            mineNumLabel->setText(content);
+        }
     }
+}
+bool MainWindow::isNormalMode(){
+    return dynamic_cast<NormalGameLogic*>(this->gl)!=0;
+}
+bool MainWindow::isCompeteMode(){
+    return dynamic_cast<CompeteGameLogic*>(this->gl)!=0;
 }

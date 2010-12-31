@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewGameDialog.ui'
 **
-** Created: Mon Dec 27 00:22:04 2010
+** Created: Fri Dec 31 04:19:51 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

@@ -2,9 +2,10 @@
 #define MAINWINDOW_H
 
 #include<QtGui>
-#include"NormalGameLogic.h"
+#include"GameLogic.h"
 #include"MsButton.h"
 #include<vector>
+#include"Player.h"
 
 class MainWindow: public QMainWindow{
     Q_OBJECT
@@ -29,6 +30,9 @@ public:
     void createMenuBar();
     void createActions();
     void updateStatusBar();
+
+    bool isCompeteMode();
+    bool isNormalMode();
 private:
     std::vector<std::vector<MsButton*> > buttons;
     std::vector<std::vector<Cell> > boardCopy;

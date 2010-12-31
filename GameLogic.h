@@ -25,8 +25,8 @@ public:
     };
 
     GameLogic();
-    void newGame(int row,int col,int num);
-    void newGame(int row,int col,const Board::LocationList &lst);
+    virtual void newGame(int row,int col,int num);
+    virtual void newGame(int row,int col,const Board::LocationList &lst);
     int getRow() ;
     int getCol() ;
     int getNum() ;
@@ -47,7 +47,6 @@ public:
 signals:
     void winSignal();
     void loseSignal();
-    //void boardChangedSignal();
 };
 
 #endif // GAMELOGIC_H

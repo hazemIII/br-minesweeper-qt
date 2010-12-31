@@ -7,7 +7,11 @@ HEADERS += GameLogic.h \
     MsButton.h \
     IconFactory.h \
     NewGameDialog.h \
-    ui_NewGameDialog.h
+    ui_NewGameDialog.h \
+    CompeteGameLogic.h \
+    HumanPlayer.h \
+    Player.h \
+    AIPlayer.h
 SOURCES += Cell.cpp \
     Board.cpp \
     util.cpp \
@@ -19,6 +23,10 @@ SOURCES += Cell.cpp \
     MsButton.cpp \
     IconFactory.cpp \
     main.cpp \
-    NewGameDialog.cpp
+    NewGameDialog.cpp \
+    Player.cpp \
+    HumanPlayer.cpp \
+    CompeteGameLogic.cpp \
+    AIPlayer.cpp
 RESOURCES += resource.qrc
 FORMS += *.ui

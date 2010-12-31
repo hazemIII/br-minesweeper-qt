@@ -20,7 +20,6 @@ void GameLogic::newGame(int row, int col, const Board::LocationList &lst){
     this->num=lst.size();
     board=new Board(row,col,lst);
     setState(RUN);
-    //emit this->boardChangedSignal();
 }
 void GameLogic::newGame(int row, int col, int num){
     if(row < Board::MIN_ROW_NUM || col < Board::MIN_COLUMN_NUM
@@ -32,7 +31,6 @@ void GameLogic::newGame(int row, int col, int num){
     this->num=num;
     board=new Board(row,col,num);
     setState(RUN);
-    //emit this->boardChangedSignal();
 }
 int GameLogic::getNum(){
     return num;
@@ -42,9 +40,11 @@ bool GameLogic::validState(int v){
             v==GameLogic::WIN || v==GameLogic::LOSE;
 }
 void GameLogic::setState(int new_state){
-    if(this->validState(new_state))
-        state=new_state;
-    else
+    if(this->validState(new_state)){
+        if(state!=new_state){
+            state=new_state;
+        }
+    }else
         throw std::invalid_argument("unknown state for GameLogic: "+str(new_state));
 }
 std::string GameLogic::cheat(){
@@ -88,7 +88,6 @@ void GameLogic::revealAll(){
     for(int i=0;i<board->getRow();i++)
         for(int j=0;j<board->getCol();j++)
             this->getCell(i,j).setState(Cell::KNOWN);
-    //emit this->boardChangedSignal();
 }
 int GameLogic::getRow(){
     return board->getRow();

@@ -3,6 +3,7 @@
 
 
 #include"util.h"
+#include<QObject>
 
 class Cell {
 private:
