@@ -56,7 +56,7 @@ void CompeteGameLogic::dig(int i, int j){
     }
     Cell& c=board->getCell(i,j);
     if(c.getState()!=Cell::UNKNOWN){
-        printErr("Can only dig UNKNOWN cells\n");
+        throw std::logic_error("Can only dig UNKNOWN cells");
         return;
     }else{
         //  successfull dig
