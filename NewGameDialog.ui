@@ -6,18 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>337</height>
+    <width>322</width>
+    <height>483</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_4">
    <property name="sizeConstraint">
     <enum>QLayout::SetFixedSize</enum>
    </property>
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0" colspan="3">
     <widget class="QGroupBox" name="basicGroupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -62,24 +62,44 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QRadioButton" name="normalMode">
-     <property name="text">
-      <string>normal mode</string>
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="serverGroupBox">
+     <property name="title">
+      <string>Server</string>
      </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="serverAddress">
+        <property name="text">
+         <string>127.0.0.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Server IP:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Port:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="portNumber">
+        <property name="text">
+         <string>9527</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QRadioButton" name="competeMode">
-     <property name="text">
-      <string>compete mode</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="4" column="0" colspan="3">
     <widget class="QGroupBox" name="selectPlayerGroupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -136,13 +156,37 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="9" column="0" colspan="3">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QRadioButton" name="netMode">
+     <property name="text">
+      <string>net mode</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QRadioButton" name="normalMode">
+     <property name="text">
+      <string>normal mode</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QRadioButton" name="competeMode">
+     <property name="text">
+      <string>compete mode</string>
      </property>
     </widget>
    </item>
@@ -163,8 +207,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>240</x>
-     <y>361</y>
+     <x>249</x>
+     <y>473</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -179,8 +223,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>240</x>
-     <y>361</y>
+     <x>249</x>
+     <y>473</y>
     </hint>
     <hint type="destinationlabel">
      <x>275</x>
@@ -195,12 +239,28 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>177</y>
+     <x>135</x>
+     <y>193</y>
     </hint>
     <hint type="destinationlabel">
-     <x>174</x>
-     <y>200</y>
+     <x>183</x>
+     <y>440</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>netMode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>serverGroupBox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>186</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>243</x>
+     <y>208</y>
     </hint>
    </hints>
   </connection>

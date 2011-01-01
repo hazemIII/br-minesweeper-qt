@@ -50,6 +50,7 @@ public slots:
     void aboutSlot();
     void winSlot();
     void loseSlot();
+    void updateGUISlot(bool flag);
 };
 
 #endif // MAINWINDOW_H

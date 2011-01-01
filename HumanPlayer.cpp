@@ -9,8 +9,9 @@ void HumanPlayer::makeMove(int i, int j){
         this->gl->dig(i,j);
         if(gl->getCell(i,j).getValue()!=Cell::MINE)
             this->gl->switchTurn();
-    }catch(std::exception e){
-        printErr("exception when human player is trying to make a move..");
+    }catch(std::logic_error e){
+        printErr("exception when human player is trying to make a move:");
+        printErr(e.what());
     }
 }
 HumanPlayer::HumanPlayer(QString name, CompeteGameLogic *gl):Player(name,gl){

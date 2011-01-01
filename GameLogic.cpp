@@ -67,11 +67,13 @@ std::string GameLogic::toString(){
         return "";
 }
 void GameLogic::floodFillDig(int i, int j){
-    if(state!=GameLogic::RUN)
-        throw std::logic_error("Game is not running");
-    else if(!board->validCoordinate(i,j))
-        throw std::invalid_argument("Invalid arguments");
-
+    if(state!=GameLogic::RUN){
+        printErr("Game is not running");
+        return;
+    }else if(!board->validCoordinate(i,j)){
+        printErr("Invalid arguments");
+        return;
+    }
     Board::LocationList lst=board->getNeighbours(i,j);
     board->getCell(i,j).setState(Cell::KNOWN);
     for(size_t i=0;i<lst.size();i++){

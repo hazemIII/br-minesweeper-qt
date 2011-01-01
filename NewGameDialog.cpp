@@ -7,7 +7,7 @@ NewGameDialog::NewGameDialog(int row,int col,int num, QWidget *parent):QDialog(p
     connect(this->player1ComboBox,SIGNAL(activated(QString)),this,SLOT(selectPlayer1(QString)));
     connect(this->player2ComboBox,SIGNAL(activated(QString)),this,SLOT(selectPlayer2(QString)));
     this->selectPlayerGroupBox->hide();
-    this->setWindowIcon(QIcon(":/images/img/new.png"));
+    this->serverGroupBox->hide();
     QRegExp num2("[0-9]{0,2}"),num4("[0-9]{0,4}");
     this->rowText->setValidator(new QRegExpValidator(num2,this));
     this->columnText->setValidator(new QRegExpValidator(num2,this));

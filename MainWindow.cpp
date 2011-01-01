@@ -5,6 +5,7 @@
 #include"NewGameDialog.h"
 #include"CompeteGameLogic.h"
 #include"NormalGameLogic.h"
+#include"RemotePlayer.h"
 
 void MainWindow::newGameSlot(){
     NewGameDialog d(this->gl->getRow(),this->gl->getCol(),this->gl->getNum());
@@ -33,10 +34,29 @@ void MainWindow::newGameSlot(){
                     p2=new AIPlayer("Player2",gl_cpt,this);
                 else
                     throw std::logic_error(std::string("Unknown player: ")+qPrintable(d.p2));
-
                 gl_cpt->setPlayer(1,p1);
                 gl_cpt->setPlayer(2,p2);
                 this->newGame(row,col,num);
+            }else if(d.netMode->isChecked()){
+                if(!this->isCompeteMode())this->createCompeteGameLogic();
+                CompeteGameLogic* gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+                RemotePlayer* p=new RemotePlayer("Remote Player",gl_cpt,
+                                                 this,d.serverAddress->text(),d.portNumber->text().toUShort());
+                while(p->getState()==RemotePlayer::CONNECTING)
+                    QApplication::processEvents();//busy loop, connecting to server
+                if(p->getState()==RemotePlayer::FAIL){
+                    QMessageBox::warning(this,tr("Error"),tr("<p>Cannot connect to server.</p>"
+                                                             "<p>Start human-human compete mode by default.</p>"));
+                    gl_cpt->setPlayer(1,new HumanPlayer("Player1",gl_cpt));
+                    gl_cpt->setPlayer(2,new HumanPlayer("Player2",gl_cpt));
+                    this->newGame(row,col,num);
+                }else if(p->getState()==RemotePlayer::OK){
+                    //connect successfully
+                    p->send(QString("NEW %1 %2 %3").arg(row).arg(col).arg(num));
+                    //should receive game from server soon..
+                }else{
+                    throw std::logic_error("unknown state of remote player. WTF?");
+                }
             }else{
                 throw std::logic_error("unknown mode? WTF?");
             }
@@ -194,7 +214,14 @@ void MainWindow::dig(int i, int j){
     if(this->isNormalMode()){
         this->gl->dig(i,j);
     }else if(this->isCompeteMode()){
-        dynamic_cast<CompeteGameLogic*>(gl)->getCurrentPlayer()->makeMove(i,j);
+        //in compete mode, only (exact)humanPlayer or (exact)localPlayer can call this function.
+        //all other kinds of players handle it directly themselves
+        CompeteGameLogic* gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
+        Player* p=gl_cpt->getCurrentPlayer();
+        if(gl_cpt->isExactHumanPlayer(p) || gl_cpt->isExactLocalPlayer(p))
+            p->makeMove(i,j);
+        else
+            printErr("You are not current player.");
     }else{
         throw std::logic_error("Unknown game mode");
     }
@@ -301,4 +328,7 @@ bool MainWindow::isNormalMode(){
 bool MainWindow::isCompeteMode(){
     if(!gl)return false;
     return dynamic_cast<CompeteGameLogic*>(gl)!=0;
+}
+void MainWindow::updateGUISlot(bool flag){
+    updateGUI(flag);
 }

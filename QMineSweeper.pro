@@ -11,7 +11,9 @@ HEADERS += GameLogic.h \
     CompeteGameLogic.h \
     HumanPlayer.h \
     Player.h \
-    AIPlayer.h
+    AIPlayer.h \
+    RemotePlayer.h \
+    LocalPlayer.h
 SOURCES += Cell.cpp \
     Board.cpp \
     util.cpp \
@@ -27,6 +29,9 @@ SOURCES += Cell.cpp \
     Player.cpp \
     HumanPlayer.cpp \
     CompeteGameLogic.cpp \
-    AIPlayer.cpp
+    AIPlayer.cpp \
+    RemotePlayer.cpp \
+    LocalPlayer.cpp
 RESOURCES += resource.qrc
 FORMS += *.ui
+QT += network
