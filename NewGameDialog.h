@@ -8,6 +8,7 @@
 class NewGameDialog : public QDialog, public Ui::NewGameDialog{
     Q_OBJECT
 public:
+    static QString lastIP,lastPort;
     QString p1,p2;
     NewGameDialog(int row=-1,int col=-1,int num=-1,QWidget* parent=0);
 private slots:

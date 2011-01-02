@@ -1,7 +1,9 @@
 #include"GameLogic.h"
 #include"util.h"
 GameLogic::GameLogic():board(0),state(STOP){}
-
+GameLogic::~GameLogic(){
+    delete board;
+}
 Cell& GameLogic::getCell(int i, int j){
     if(!board) throw std::runtime_error("Board has not been constructed yet");
     return board->getCell(i,j);

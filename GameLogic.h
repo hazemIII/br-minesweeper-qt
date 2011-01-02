@@ -25,6 +25,7 @@ public:
     };
 
     GameLogic();
+    ~GameLogic();
     virtual void newGame(int row,int col,int num);
     virtual void newGame(int row,int col,const Board::LocationList &lst);
     int getRow() ;

@@ -21,6 +21,8 @@ void RemotePlayer::socketError(){
     state=FAIL;
 }
 RemotePlayer::~RemotePlayer(){
+    printErr("Player deleted\n");
+    socket->close();
     delete socket;
 }
 int RemotePlayer::getState(){return state;}

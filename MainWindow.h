@@ -10,6 +10,7 @@ class MainWindow: public QMainWindow{
     Q_OBJECT
 public:
     MainWindow(QWidget* parent=0);
+    ~MainWindow();
     void updateGUI(bool rebuildBoard=false);
     void newGame(int row,int col,int num);
     void dig(int i,int j);

@@ -10,8 +10,8 @@ public:
     typedef std::vector<Location> LocationList;
     const static int MAX_ROW_NUM=30;
     const static int MAX_COLUMN_NUM=60;
-    const static int MIN_ROW_NUM=3;
-    const static int MIN_COLUMN_NUM=3;
+    const static int MIN_ROW_NUM=6;
+    const static int MIN_COLUMN_NUM=6;
 private:
     int row,col;                            //  size of the board
     std::vector<std::vector<Cell*> > board;

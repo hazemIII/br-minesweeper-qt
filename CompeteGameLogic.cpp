@@ -30,12 +30,14 @@ void CompeteGameLogic::clearPlayer(int idx){
             dynamic_cast<QObject*>(p1)->deleteLater();
         else
             delete p1;
+        p1=0;
     }else if(idx==2){
         if(!p2)return;
         if(isQObject(p2))
             dynamic_cast<QObject*>(p2)->deleteLater();
         else
             delete p2;
+        p2=0;
     }else throw std::logic_error("unknown player index: "+str(idx));
 }
 void CompeteGameLogic::switchTurn(){
@@ -112,8 +114,14 @@ Player* CompeteGameLogic::getNextPlayer(){
     return turn==p1 ? p2 : p1;
 }
 CompeteGameLogic::~CompeteGameLogic(){
-    delete p1;
-    delete p2;
+    if(this->isQObject(p1))
+        dynamic_cast<QObject*>(p1)->deleteLater();
+    else
+        delete p1;
+    if(this->isQObject(p2))
+        dynamic_cast<QObject*>(p2)->deleteLater();
+    else
+        delete p2;
 }
 void CompeteGameLogic::newGame(int row, int col, int num){
     //remote player will never call this function since board layout

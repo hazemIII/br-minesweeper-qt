@@ -12,6 +12,8 @@ NewGameDialog::NewGameDialog(int row,int col,int num, QWidget *parent):QDialog(p
     this->rowText->setValidator(new QRegExpValidator(num2,this));
     this->columnText->setValidator(new QRegExpValidator(num2,this));
     this->mineText->setValidator(new QRegExpValidator(num4,this));
+    this->serverAddress->setText(lastIP);
+    this->portNumber->setText(lastPort);
     if(row!=-1 && col!=-1 && num!=-1){
         this->rowText->setText(qstr(row));
         this->columnText->setText(qstr(col));
@@ -23,3 +25,5 @@ void NewGameDialog::selectPlayer1(QString s){
 }void NewGameDialog::selectPlayer2(QString s){
     p2=s;
 }
+QString NewGameDialog::lastIP="192.168.1.101";
+QString NewGameDialog::lastPort="9527";

@@ -6,6 +6,8 @@
 
 class NormalGameLogic:public GameLogic{
 public:
+
+
     virtual void dig(int i,int j);
     virtual void mark(int i,int j);
     virtual void unmark(int i,int j);

@@ -42,6 +42,8 @@ void MainWindow::newGameSlot(){
                 CompeteGameLogic* gl_cpt=dynamic_cast<CompeteGameLogic*>(gl);
                 RemotePlayer* p=new RemotePlayer("Remote Player",gl_cpt,
                                                  this,d.serverAddress->text(),d.portNumber->text().toUShort());
+                NewGameDialog::lastIP=d.serverAddress->text();
+                NewGameDialog::lastPort=d.portNumber->text();
                 while(p->getState()==RemotePlayer::CONNECTING)
                     QApplication::processEvents();//busy loop, connecting to server
                 if(p->getState()==RemotePlayer::FAIL){
@@ -60,7 +62,7 @@ void MainWindow::newGameSlot(){
             }else{
                 throw std::logic_error("unknown mode? WTF?");
             }
-        }catch(std::exception ){
+        }catch(std::invalid_argument ){
             QMessageBox::warning(this,tr("Invalid input"),
                                  tr(("<h4>Invalid input encountered</h4>"
                                      "<ul>"
@@ -68,6 +70,10 @@ void MainWindow::newGameSlot(){
                                      "<li>column within ["+str(Board::MIN_COLUMN_NUM)+","+str(Board::MAX_COLUMN_NUM)+"]</li>"
                                      "<li>mine number within [0,row*column]</li>"
                                      "</ul>").c_str()),
+                                 QMessageBox::Ok);
+        }catch(std::exception){
+            QMessageBox::warning(this,tr("Unknown Problem"),
+                                 tr("<h4>Unknown Problem Occurs</h4>"),
                                  QMessageBox::Ok);
         }
     }
@@ -128,6 +134,9 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent){
     createStatusBar();
     this->newGame(10,10,10);    //start a new game by default
 
+}
+MainWindow::~MainWindow(){
+    gl->deleteLater();
 }
 void MainWindow::createBoard(int row, int col){
     this->frame=new QFrame(this->central);

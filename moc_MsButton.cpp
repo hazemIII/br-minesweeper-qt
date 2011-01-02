@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'MsButton.h'
 **
-** Created: Sat Jan 1 14:12:14 2011
+** Created: Sun Jan 2 01:40:53 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!

@@ -1,5 +1,6 @@
 #include"NormalGameLogic.h"
 
+
 void NormalGameLogic::dig(int i, int j){
     //  need to check win & lose after calling this function
     if(state!=GameLogic::RUN)
