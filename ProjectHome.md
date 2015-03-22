@@ -1,0 +1,1 @@
+minesweeper implemented in QT.
